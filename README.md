@@ -1,2 +1,2 @@
 # Compositer DSC Resources
-My collection of composite DSC resources for use in Azure Automation. 
+My collection of composite DSC resources, and their accompanying configuration files for use in Azure Automation. 

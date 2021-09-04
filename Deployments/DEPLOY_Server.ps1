@@ -142,11 +142,16 @@ $MemberServer = @{
 Write-Warning "BUILD"
 $Build = .\Build-OnPremVM.ps1 @MemberServer
 
-Write-Warning "COMPILE"
-$CompilationJob = .\New-WindowsMetaconfig.ps1 $Build.NewVMName
+if ($Role -like "Windows*") {
+    Write-Warning "COMPILE"
+    $CompilationJob = .\New-WindowsMetaconfig.ps1 $Build.NewVMName
 
-Write-Warning "WAIT"
-Wait-ForDSCCompilationJob $CompilationJob
+    Write-Warning "WAIT"
+    Wait-ForDSCCompilationJob $CompilationJob
+
+}else {
+    Write-Warning 'Deploying Linux clone'
+}
 
 Write-Warning "DEPLOY"
 .\Deploy-OnPremVM.ps1 $Build.NewVMName

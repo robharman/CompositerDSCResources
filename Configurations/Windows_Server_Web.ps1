@@ -71,13 +71,13 @@ Configuration Windows_Server_Web {
         $AdditionalDrives
     )
 
-    Import-DscResource -ModuleName "Home.DSC.Windows.Common"
-    Import-DscResource -ModuleName "Home.DSC.Windows.Server"
-    Import-DscResource -ModuleName "Home.DSC.Windows.Web"
+    Import-DscResource -ModuleName 'Home.DSC.Windows.Common'
+    Import-DscResource -ModuleName 'Home.DSC.Windows.Server'
+    Import-DscResource -ModuleName 'Home.DSC.Windows.Web'
 
-    Import-DscResource -ModuleName "ComputerManagementDsc"
-    Import-DscResource -ModuleName "PSDscResources"
-    Import-DscResource -ModuleName "NetworkingDSC"
+    Import-DscResource -ModuleName 'ComputerManagementDsc'
+    Import-DscResource -ModuleName 'PSDscResources'
+    Import-DscResource -ModuleName 'NetworkingDSC'
 
     # Import credentials from Azure Automation Credential vault, configure Service Account Names, and add required
     # local admin accounts.
@@ -113,23 +113,23 @@ Configuration Windows_Server_Web {
         DefaultTimeZone SetTimeZoneToEST {}
 
         DefaultPSExecutionPolicy SetRemoteSigned {
-            ExecutionPolicy                 =   "RemoteSigned"
+            ExecutionPolicy                 =   'RemoteSigned'
         }
 
         DefaultScriptSettings SetHomeScriptsDefaultSettings {}
 
         DefaultCA_Root SetRootCAtoCERT00 {
-            Dependson                       =   "[DefaultEnvironment]BaseConfiguration"
+            Dependson                       =   '[DefaultEnvironment]BaseConfiguration'
             HomePKI                         =   $HomePKI
         }
 
         DefaultCA_Enterprise SetEnterpriseCAtoCert00 {
-            Dependson                       =   "[DefaultCA_Root]SetRootCAtoCERT00"
+            Dependson                       =   '[DefaultCA_Root]SetRootCAtoCERT00'
             HomePKI                         =   $HomePKI
         }
 
         DefaultTrustedPublishers SetTrustedPublishers {
-            Dependson                       =   "[DefaultCA_Enterprise]SetEnterpriseCAtoCert00"
+            Dependson                       =   '[DefaultCA_Enterprise]SetEnterpriseCAtoCert00'
             HomePKI                         =   $HomePKI
         }
         #endregion Windows Defaults
@@ -137,7 +137,7 @@ Configuration Windows_Server_Web {
         DefaultNetworking SetDefaultNetworking {
             PrimaryDNSServer                =   $PrimaryDNSServer
             SecondaryDNSServer              =   $SecondaryDNSServer
-            InterfaceAlias                  =   "Ethernet"
+            InterfaceAlias                  =   'Ethernet'
         }
 
         <# WindowsServerCommonDefaults sets the following defaults:
@@ -167,7 +167,7 @@ Configuration Windows_Server_Web {
             AllowedRanges                   =   $AllowedAdminIPs
         }
 
-        if ($NodeName -notlike "*AZ*") {
+        if ($NodeName -notlike '*AZ*') {
             WindowsServerActivation ActivateWindows {}
         }
 
@@ -177,15 +177,15 @@ Configuration Windows_Server_Web {
         #endregion Windows Server Configuration
         #region Server specific config
         NetIPInterface DisableDHCPPrimaryNIC {
-            InterfaceAlias                  =   "Ethernet"
-            AddressFamily                   =   "IPv4"
-            DHCP                            =   "Disabled"
+            InterfaceAlias                  =   'Ethernet'
+            AddressFamily                   =   'IPv4'
+            DHCP                            =   'Disabled'
         }
 
         IPAddress SetDefaultNIC {
             IPAddress                       =   "$IPAddress/24"
-            InterfaceAlias                  =   "Ethernet"
-            AddressFamily                   =   "IPv4"
+            InterfaceAlias                  =   'Ethernet'
+            AddressFamily                   =   'IPv4'
         }
 
         DefaultGatewayAddress SetDefaultGateway {
@@ -200,7 +200,7 @@ Configuration Windows_Server_Web {
         }
 
         if ($AdditionalDrives.DiskID | Group-Object | Where-Object {$_.Count -gt 1}) {
-            throw "Cannot set duplicate disk IDs"
+            throw 'Cannot set duplicate disk IDs'
         }
 
         foreach ($AdditionalDrive in $AdditionalDrives) {
@@ -231,11 +231,11 @@ Configuration Windows_Server_Web {
         }
         #region Remove legacy features
         WindowsServerRemoveLegacyFeatures RemoveLegacySMB {
-            FeatureName                     =   "FS-SMB1"
+            FeatureName                     =   'FS-SMB1'
         }
 
         WindowsServerRemoveLegacyFeatures RemoveLegacyPowerShell {
-            FeatureName                     =   "PowerShell-V2"
+            FeatureName                     =   'PowerShell-V2'
         }
         #endregion
     }

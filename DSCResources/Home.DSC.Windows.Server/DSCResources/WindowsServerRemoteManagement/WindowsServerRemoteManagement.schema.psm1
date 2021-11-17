@@ -1,5 +1,5 @@
 Configuration WindowsServerRemoteManagement {
-    
+
     Import-DscResource -ModuleName 'ComputerManagementDsc'
     Import-DscResource -ModuleName 'WSManDSC'
 
@@ -13,6 +13,6 @@ Configuration WindowsServerRemoteManagement {
         Ensure              =   'Present'
         Transport           =   'HTTP'
         SubjectFormat       =   'Both'
-        Issuer              =   'CN=Home-CERT00-CA,DC=home,DC=robbiecrash,DC=me'
+        Issuer              =   'InternalCA'
     }
 }
